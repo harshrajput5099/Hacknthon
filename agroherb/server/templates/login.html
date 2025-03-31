@@ -1,33 +1,135 @@
-{% extends 'base.html' %}
-
-{% block content %}
-
-<div class="flex justify-center items-center">
-    <div class="w-full max-w-md">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <div class="bg-green-600 text-white text-center py-4">
-                <h3 class="text-xl font-semibold">Login</h3>
-            </div>
-            <div class="p-6">
-                <form method="post" class="space-y-4">
-                    {% csrf_token %}
-                    <div class="space-y-2">
-                        {{ form.as_p }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AgroHerb</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background-color: #f9fafb;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="tel"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            background-color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex">
+        <!-- Left side - Image and welcome text -->
+        <div class="hidden lg:flex lg:w-1/2 bg-green-600 items-center justify-center p-12">
+            <div class="max-w-md text-white">
+                <h1 class="text-4xl font-bold mb-6">Welcome Back</h1>
+                <p class="text-lg mb-8">Sign in to continue your agricultural journey</p>
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Access your personalized dashboard</span>
                     </div>
-                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md">
-                        Login
-                    </button>
-                </form>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Connect with your farming community</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Get expert advice and support</span>
+                    </div>
+                </div>
             </div>
-            <div class="bg-gray-100 text-center py-3">
-                <p class="text-gray-700">Don't have an account? 
-                    <a href="{% url 'signup' %}" class="text-green-600 hover:text-green-700 font-medium">
-                        Sign up here
-                    </a>
-                </p>
+        </div>
+
+        <!-- Right side - Login form -->
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
+            <div class="w-full max-w-md">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900">Sign In</h2>
+                    <p class="mt-2 text-gray-600">Welcome back to your account</p>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <form method="post" class="space-y-6">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div>
+                            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ field.label }}
+                            </label>
+                            <div class="relative">
+                                {{ field }}
+                            </div>
+                            {% if field.errors %}
+                            <div class="mt-2 text-sm text-red-600">
+                                {{ field.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input type="checkbox" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" id="remember">
+                                <label for="remember" class="ml-2 block text-sm text-gray-700">
+                                    Remember me
+                                </label>
+                            </div>
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-green-600 hover:text-green-500">
+                                    Forgot password?
+                                </a>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-[1.02]">
+                            Sign In
+                        </button>
+                    </form>
+
+                    <div class="mt-8">
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-200"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-gray-500">Don't have an account?</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 text-center">
+                            <a href="{% url 'signup' %}" class="font-medium text-green-600 hover:text-green-500">
+                                Create a new account
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-{% endblock %}
+</body>
+</html>
