@@ -1,173 +1,212 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}JavikiSetu{% endblock %}</title>
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>{% block title %}AgroHerb{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <!-- Add FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
 
-<body>
-
+<body class="bg-white dark:bg-gray-900 transition-colors duration-200">
     {% load static %}
     <!-- Navbar -->
-    <nav class="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
-        <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
-            <a href="{% url 'login' %}" class="flex items-center">
-                <img class="self-center w-40 rounded-md" src="{% static 'logo.jpeg' %}" alt="">
+    <nav class="fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="{% static 'logo.png' %}" class="h-12" alt="AgroHerb Logo">
             </a>
-            <div class="flex items-center lg:order-2">
-                <div class="hidden mt-2 mr-4 sm:inline-block">
-                    <span></span>
-                </div>
 
-                <a href="{% url 'login' %}"
-                    class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">Login</a>
-                <button data-collapse-toggle="mobile-menu-2" type="button"
-                    class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                    aria-controls="mobile-menu-2" aria-expanded="true">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                            clip-rule="evenodd"></path>
+            <!-- Dark Mode Toggle & Mobile Menu Button -->
+            <div class="flex items-center md:order-2 space-x-3 md:space-x-4">
+                <!-- Dark mode toggle -->
+                <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
                     </svg>
-                    <svg class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
+                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
+                    </svg>
+                </button>
+
+                <!-- Login Button -->
+                <a href="{% url 'login' %}" class="text-white bg-gradient-to-r from-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                    Login
+                </a>
+
+                <!-- Mobile menu button -->
+                <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
                     </svg>
                 </button>
             </div>
-            <div class="items-center justify-between w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
-                <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+
+            <!-- Menu Items -->
+            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+                <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
                     <li>
-                        <a href="{% url 'home' %}"
-                            class="block py-2 pl-3 pr-4 text-white bg-green-700 rounded lg:bg-transparent lg:text-green-700 lg:p-0 dark:text-white"
-                            aria-current="page">Home</a>
-                    </li>
-                    <!-- <li>
-                        <a href="#"
-                            class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Company</a>
-                    </li> -->
-                    <li>
-                        <a href="#"
-                            class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Marketplace</a>
+                        <a href="{% url 'home' %}" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0 md:dark:hover:text-green-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page">Home</a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Features</a>
+                        <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0 md:dark:hover:text-green-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Marketplace</a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Team</a>
+                        <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0 md:dark:hover:text-green-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Features</a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
+                        <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0 md:dark:hover:text-green-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Team</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0 md:dark:hover:text-green-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Content Block -->
-    <div class="container py-10  min-h-screen bg-green-50">
+    <!-- Content Block with top padding for fixed navbar -->
+    <div class="container mx-auto px-4 pt-20 min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
         {% block content %}
         {% endblock %}
     </div>
 
-
-
-
     <!-- Footer -->
-<footer class="bg-green-900 text-green-50 pt-16 pb-8 px-6 md:px-8">
-    <div class="max-w-7xl mx-auto">
-        <!-- Newsletter Section -->
-        <div class="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-y-12 md:gap-x-16 lg:gap-x-20">
-            <div class="md:col-span-5 lg:col-span-6 max-w-md">
-                <h3 class="text-2xl font-semibold mb-6 leading-tight">
-                    Stay updated with our quarterly newsletter, <span class="font-bold">"You've got mail."</span>
-                </h3>
-                <div class="mt-4 space-y-4">
-                    <input type="email" placeholder="Enter your email..."
-                        class="newsletter-input w-full px-4 py-3 bg-green-600 rounded text-green-50 border border-green-500 focus:outline-none focus:ring-2 focus:ring-green-300">
-                    <button
-                        class="bg-green-50 text-green-700 px-6 py-2.5 rounded-full flex items-center font-medium hover:bg-green-100 transition-colors">
-                        Subscribe
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </button>
+    <footer class="bg-green-900 text-green-50 pt-16 pb-8 px-6 md:px-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Newsletter Section -->
+            <div class="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-y-12 md:gap-x-16 lg:gap-x-20">
+                <div class="md:col-span-5 lg:col-span-6 max-w-md">
+                    <h3 class="text-2xl font-semibold mb-6 leading-tight">
+                        Stay updated with our quarterly newsletter, <span class="font-bold">"You've got mail."</span>
+                    </h3>
+                    <div class="mt-4 space-y-4">
+                        <input type="email" placeholder="Enter your email..."
+                            class="newsletter-input w-full px-4 py-3 bg-green-600 rounded text-green-50 border border-green-500 focus:outline-none focus:ring-2 focus:ring-green-300">
+                        <button
+                            class="bg-green-50 text-green-700 px-6 py-2.5 rounded-full flex items-center font-medium hover:bg-green-100 transition-colors">
+                            Subscribe
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="hidden md:block md:col-span-1 lg:hidden"></div>
+                <!-- Links Section -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 col-span-1 md:col-span-7 lg:col-span-6 gap-y-12 sm:gap-x-20 lg:gap-x-40">
+                    <!-- Get in Touch -->
+                    <div class="space-y-6">
+                        <h3 class="text-lg font-bold uppercase tracking-wide text-green-200 mb-4 border-b border-green-500 pb-2">
+                            Get in Touch
+                        </h3>
+                        <ul class="space-y-4 min-w-max">
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Start a Project</a></li>
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Join the Team</a></li>
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Press & Media</a></li>
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Drop Us a Note</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- See More -->
+                    <div class="space-y-6">
+                        <h3 class="text-lg font-bold uppercase tracking-wide text-green-200 mb-4 border-b border-green-500 pb-2">
+                            See More
+                        </h3>
+                        <ul class="space-y-4">
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Home</a></li>
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Work</a></li>
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Services</a></li>
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Latest</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Follow Us -->
+                    <div class="space-y-6">
+                        <h3 class="text-lg font-bold uppercase tracking-wide text-green-200 mb-4 border-b border-green-500 pb-2">
+                            Follow Us
+                        </h3>
+                        <ul class="space-y-4">
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Instagram</a></li>
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">LinkedIn</a></li>
+                            <li><a href="#" class="text-base hover:text-green-100 transition-colors">Twitter</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="hidden md:block md:col-span-1 lg:hidden"></div>
-            <!-- Links Section -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 col-span-1 md:col-span-7 lg:col-span-6 gap-y-12 sm:gap-x-20 lg:gap-x-40">
-                <!-- Get in Touch -->
-                <div class="space-y-6">
-                    <h3 class="text-lg font-bold uppercase tracking-wide text-green-200 mb-4 border-b border-green-500 pb-2">
-                        Get in Touch
-                    </h3>
-                    <ul class="space-y-4 min-w-max">
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Start a Project</a></li>
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Join the Team</a></li>
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Press & Media</a></li>
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Drop Us a Note</a></li>
-                    </ul>
-                </div>
 
-                <!-- See More -->
-                <div class="space-y-6">
-                    <h3 class="text-lg font-bold uppercase tracking-wide text-green-200 mb-4 border-b border-green-500 pb-2">
-                        See More
-                    </h3>
-                    <ul class="space-y-4">
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Home</a></li>
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Work</a></li>
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Services</a></li>
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Latest</a></li>
-                    </ul>
-                </div>
-
-                <!-- Follow Us -->
-                <div class="space-y-6">
-                    <h3 class="text-lg font-bold uppercase tracking-wide text-green-200 mb-4 border-b border-green-500 pb-2">
-                        Follow Us
-                    </h3>
-                    <ul class="space-y-4">
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Instagram</a></li>
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">LinkedIn</a></li>
-                        <li><a href="#" class="text-base hover:text-green-100 transition-colors">Twitter</a></li>
-                    </ul>
+            <!-- Divider -->
+            <div class="mt-16 border-t border-green-500 pt-6">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <!-- Sitemap and Privacy -->
+                    <div class="flex space-x-6 mb-4 md:mb-0">
+                        <a href="#" class="text-sm text-green-200 hover:text-green-100">Sitemap</a>
+                        <a href="#" class="text-sm text-green-200 hover:text-green-100">Privacy Policy</a>
+                    </div>
+                    <!-- Copyright -->
+                    <div class="text-sm text-green-200">
+                        © 2025, Site. All Rights Reserved.
+                    </div>
                 </div>
             </div>
         </div>
+    </footer>
 
-        <!-- Divider -->
-        <div class="mt-16 border-t border-green-500 pt-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                <!-- Sitemap and Privacy -->
-                <div class="flex space-x-6 mb-4 md:mb-0">
-                    <a href="#" class="text-sm text-green-200 hover:text-green-100">Sitemap</a>
-                    <a href="#" class="text-sm text-green-200 hover:text-green-100">Privacy Policy</a>
-                </div>
-                <!-- Copyright -->
-                <div class="text-sm text-green-200">
-                    © 2025, Site. All Rights Reserved.
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+    <script>
+        // Dark mode toggle functionality
+        var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
+        // Change the icons inside the button based on previous settings
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        var themeToggleBtn = document.getElementById('theme-toggle');
+
+        themeToggleBtn.addEventListener('click', function() {
+            // Toggle icons
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            // If is set in localStorage
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                }
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
