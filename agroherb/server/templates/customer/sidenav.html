@@ -1,0 +1,53 @@
+<!-- Sidebar -->
+<div class="w-64 bg-green-800 text-white h-screen fixed z-50">
+    <div class="p-4">
+        <div class="text-center mb-6">
+            {% if customer_profile and customer_profile.photo %}
+                <img src="{{ customer_profile.photo.url }}" alt="Profile Photo" class="w-24 h-24 rounded-full mx-auto border-4 border-white mb-3">
+            {% else %}
+                <img src="/media/profile_photos/default.jpg" alt="Default Profile" class="w-24 h-24 rounded-full mx-auto border-4 border-white mb-3">
+            {% endif %}
+            <h3 class="text-lg font-semibold">{{ user.full_name }}</h3>
+            <p class="text-sm text-green-200">Customer</p>
+        </div>
+
+        <nav class="space-y-1">
+            <a href="{% url 'customer_dashboard' %}" class="flex items-center px-4 py-2 text-white hover:bg-green-700 rounded-lg transition-colors">
+                <i class="fas fa-home w-6"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'shop_products' %}" class="flex items-center px-4 py-2 text-white hover:bg-green-700 rounded-lg transition-colors">
+                <i class="fas fa-shopping-basket w-6"></i>
+                <span>Shop Products</span>
+            </a>
+            <a href="{% url 'customer_profile' %}" class="flex items-center px-4 py-2 text-white hover:bg-green-700 rounded-lg transition-colors">
+                <i class="fas fa-user w-6"></i>
+                <span>Profile</span>
+            </a>
+            <a href="#" class="flex items-center px-4 py-2 text-white hover:bg-green-700 rounded-lg transition-colors">
+                <i class="fas fa-shopping-cart w-6"></i>
+                <span>My Orders</span>
+            </a>
+            <a href="#" class="flex items-center px-4 py-2 text-white hover:bg-green-700 rounded-lg transition-colors">
+                <i class="fas fa-heart w-6"></i>
+                <span>Wishlist</span>
+            </a>
+            <a href="#" class="flex items-center px-4 py-2 text-white hover:bg-green-700 rounded-lg transition-colors">
+                <i class="fas fa-credit-card w-6"></i>
+                <span>Payment History</span>
+            </a>
+            <a href="#" class="flex items-center px-4 py-2 text-white hover:bg-green-700 rounded-lg transition-colors">
+                <i class="fas fa-cog w-6"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <!-- Logout Button -->
+        <div class="absolute bottom-0 left-0 right-0 p-4">
+            <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
+                <i class="fas fa-sign-out-alt w-6"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+</div>

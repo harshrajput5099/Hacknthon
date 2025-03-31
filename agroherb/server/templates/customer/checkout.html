@@ -1,0 +1,142 @@
+{% extends 'customer/customer_base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="flex flex-col p-5">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Order Summary -->
+        <div class="md:col-span-2">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Order Summary</h2>
+                    <a href="{% url 'shop_products' %}" class="text-green-600 hover:text-green-700">
+                        <i class="fas fa-arrow-left mr-2"></i>Continue Shopping
+                    </a>
+                </div>
+                
+                {% for item in cart_items %}
+                <div class="flex items-center gap-4 py-4 border-b last:border-0">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.product_name }}" 
+                         class="w-20 h-20 object-cover rounded-lg">
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-medium text-gray-800">{{ item.product.product_name }}</h3>
+                        <p class="text-sm text-gray-600">
+                            Seller: {{ item.product.farmer.user.full_name }}
+                            {% if item.product.farmer.certification_request.status == 'approved' %}
+                            <span class="ml-2 text-green-600">
+                                <i class="fas fa-certificate"></i> Certified
+                            </span>
+                            {% endif %}
+                        </p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-gray-600">₹{{ item.product.price }} × {{ item.quantity }}</span>
+                            <span class="font-medium">₹{{ item.product.price|multiply:item.quantity }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <div class="mt-6 pt-6 border-t">
+                    <div class="flex justify-between items-center text-lg font-bold">
+                        <span>Total Amount:</span>
+                        <span class="text-green-600">₹{{ cart.total_price }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Address -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Delivery Address</h2>
+                {% if customer_profile.address %}
+                    <div class="flex items-start mb-4">
+                        <i class="fas fa-map-marker-alt text-green-600 mt-1 mr-3"></i>
+                        <div>
+                            <p class="text-gray-800">{{ customer_profile.address }}</p>
+                            <p class="text-gray-600 text-sm mt-1">Phone: {{ customer_profile.phone_number }}</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'edit_customer_profile' %}" class="text-green-600 hover:text-green-700 text-sm">
+                        <i class="fas fa-edit mr-1"></i>Edit Address
+                    </a>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-gray-600 mb-4">Please add your delivery address to continue</p>
+                        <a href="{% url 'edit_customer_profile' %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Add Address
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="md:col-span-1">
+            <div class="bg-white rounded-lg shadow-md p-6 sticky top-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Payment Details</h2>
+                
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Payment Method Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Select Payment Method</label>
+                        <div class="space-y-3">
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="payment_method" value="COD" class="text-green-600" checked>
+                                <span class="ml-3">
+                                    <span class="block text-sm font-medium text-gray-700">Cash on Delivery</span>
+                                    <span class="block text-xs text-gray-500">Pay when you receive</span>
+                                </span>
+                            </label>
+                            
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="payment_method" value="UPI" class="text-green-600">
+                                <span class="ml-3">
+                                    <span class="block text-sm font-medium text-gray-700">UPI</span>
+                                    <span class="block text-xs text-gray-500">Pay using UPI apps</span>
+                                </span>
+                            </label>
+                            
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="payment_method" value="Card" class="text-green-600">
+                                <span class="ml-3">
+                                    <span class="block text-sm font-medium text-gray-700">Credit/Debit Card</span>
+                                    <span class="block text-xs text-gray-500">Secure card payment</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Subtotal</span>
+                            <span>₹{{ cart.total_price }}</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Delivery Fee</span>
+                            <span>₹0</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg border-t pt-2 mt-2">
+                            <span>Total</span>
+                            <span class="text-green-600">₹{{ cart.total_price }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Place Order Button -->
+                    {% if customer_profile.address %}
+                    <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                        Place Order
+                    </button>
+                    {% else %}
+                    <button type="button" disabled class="w-full bg-gray-300 text-gray-500 px-6 py-3 rounded-lg cursor-not-allowed">
+                        Add Address to Continue
+                    </button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,20 @@
+<div class="sidebar">
+    <center>
+        {% if admin_profile.photo %}
+            <img src="{{ admin_profile.photo.url }}" alt="Profile Photo" class="profile-pic">
+        {% else %}
+            <img src="/media/profile_photos/default.jpg" alt="Default Profile" class="profile-pic">
+        {% endif %}
+        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+    </center>
+
+    <a href="#"></i> Dashboard</a>
+    <a href="#"><i class="fa fa-user"></i> Profile</a>
+    <a href="#"><i class="fa fa-users"></i> Manage Users</a>
+    <a href="#"><i class="fa fa-tractor"></i> Manage Farmers</a>
+    <a href="#"><i class="fa fa-file-alt"></i> Certificate Requests</a>
+    <a href="#"><i class="fa fa-seedling"></i> Manage Products</a>
+    <a href="#"><i class="fa fa-shopping-cart"></i> Order Tracking</a>
+    <a href="#"><i class="fa fa-chart-line"></i> Sales Reports</a>
+    {% comment %} <a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Logout</a> {% endcomment %}
+</div>

@@ -1,0 +1,129 @@
+{% extends 'customer/customer_base.html' %}
+
+{% block content %}
+<div class="flex flex-col p-5">
+    <!-- Profile Overview -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center">
+                <div class="relative">
+                    {% if customer_profile.photo %}
+                        <img src="{{ customer_profile.photo.url }}" alt="Profile Photo" class="w-32 h-32 rounded-full border-4 border-green-200">
+                    {% else %}
+                        <img src="/media/profile_photos/default.jpg" alt="Default Profile" class="w-32 h-32 rounded-full border-4 border-green-200">
+                    {% endif %}
+                    <span class="absolute bottom-0 right-0 bg-green-500 text-white text-xs px-2 py-1 rounded-full">Customer</span>
+                </div>
+                <div class="ml-6">
+                    <h1 class="text-3xl font-bold text-gray-800">{{ user.full_name }}</h1>
+                    <p class="text-gray-600">Member since {{ customer_profile.created_at|date:"F j, Y" }}</p>
+                </div>
+            </div>
+            <a href="{% url 'edit_customer_profile' %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                <i class="fas fa-edit mr-2"></i>Edit Profile
+            </a>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="border-t pt-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Contact Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <p class="text-sm text-gray-600 mb-1">Email</p>
+                    <p class="text-gray-800 flex items-center">
+                        <i class="fas fa-envelope mr-2 text-green-600"></i>
+                        {{ user.email }}
+                    </p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600 mb-1">Phone Number</p>
+                    <p class="text-gray-800 flex items-center">
+                        <i class="fas fa-phone mr-2 text-green-600"></i>
+                        {{ customer_profile.phone_number|default:"Not provided" }}
+                    </p>
+                </div>
+                <div class="md:col-span-2">
+                    <p class="text-sm text-gray-600 mb-1">Address</p>
+                    <p class="text-gray-800 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-green-600"></i>
+                        {{ customer_profile.address|default:"Not provided"|linebreaks }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_orders|default:"0" }}</p>
+                    <p class="text-gray-600">Total Orders</p>
+                </div>
+                <div class="p-3 bg-blue-100 rounded-full">
+                    <i class="fas fa-shopping-bag text-blue-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_reviews|default:"0" }}</p>
+                    <p class="text-gray-600">Reviews Given</p>
+                </div>
+                <div class="p-3 bg-yellow-100 rounded-full">
+                    <i class="fas fa-star text-yellow-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-2xl font-bold text-gray-800">₹{{ total_spent|default:"0" }}</p>
+                    <p class="text-gray-600">Total Spent</p>
+                </div>
+                <div class="p-3 bg-green-100 rounded-full">
+                    <i class="fas fa-wallet text-green-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+        {% if recent_orders %}
+            <div class="space-y-4">
+                {% for order in recent_orders %}
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-green-100 rounded-full">
+                            <i class="fas fa-shopping-cart text-green-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-800">Order #{{ order.order_id }}</p>
+                            <p class="text-xs text-gray-500">{{ order.placed_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-gray-800">₹{{ order.total_price }}</p>
+                        <span class="text-xs px-2 py-1 rounded-full 
+                            {% if order.order_status == 'Delivered' %}bg-green-100 text-green-800
+                            {% elif order.order_status == 'Pending' %}bg-yellow-100 text-yellow-800
+                            {% elif order.order_status == 'Cancelled' %}bg-red-100 text-red-800
+                            {% else %}bg-blue-100 text-blue-800{% endif %}">
+                            {{ order.order_status }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-4">No recent activity</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 
